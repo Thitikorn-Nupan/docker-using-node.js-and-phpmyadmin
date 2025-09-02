@@ -1,11 +1,13 @@
 import express from "express";
 
-class ServiceHttp {
+class HttpModulesService {
+
     get application() {
         return express()
     }
+
 }
 
 
 
-export default ServiceHttp
+export default HttpModulesService

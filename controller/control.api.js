@@ -1,6 +1,6 @@
-import MyLogging from '../log/my.logging.js'; // export default
-import ServiceHttp from '../services/service.http.js';
-import { plus, devide, multiply, minus } from '../services/service.modules.js'; // export { } 
+import Logging from '../log/logging.js'; // export default
+import HttpModulesService from '../services/http.modules.service.js';
+import { plus, divide, multiply, minus } from '../services/calculate.modules.service.js'; // export { }
 import ConnectDatabase from '../config/connect.database.js';
 
 
@@ -12,8 +12,8 @@ class ControlApi {
     #cndb = null
 
     constructor() {
-        this.#log = new MyLogging().log
-        this.#serviceHttp = new ServiceHttp()
+        this.#log = new Logging().log
+        this.#serviceHttp = new HttpModulesService()
         this.#cndb = new ConnectDatabase()
     }
 
@@ -32,7 +32,7 @@ class ControlApi {
         })
 
         application.get('/divide/(:a)/(:b)', (req, res) => {
-            let result = devide(Number(req.params['a']), Number(req.params['b']))
+            let result = divide(Number(req.params['a']), Number(req.params['b']))
             res.status(200).json(
                 { response: result }
             )
@@ -52,6 +52,7 @@ class ControlApi {
             )
         })
 
+        // CRUD
         application.get('/users', async (req, res) => {
             let [result] = await this.#cndb.myConnect.query('select * from users')
             res.status(200).json(
@@ -102,21 +103,10 @@ class ControlApi {
             res.status(200).json(
                 { response: result }
             )
-            /* {
-                "fieldCount": 0,
-                "affectedRows": 1,
-                "insertId": 6,
-                "info": "",
-                "serverStatus": 2,
-                "warningStatus": 0,
-                "changedRows": 0
-            } */
         })
 
         application.listen(8000, async (err) => {
-            await this.#cndb.initConnectMySQL
-            // initial database when port it starts
-            // meaning #cndb.myConnect it already to use
+            await this.#cndb.initConnectMySQL // initial database when port it starts meaning #cndb.myConnect it already to use
             if (err) {
                 throw err
             }

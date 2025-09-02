@@ -1,58 +1,73 @@
-# file config like .properties (key : value)
+# docker-compose.yml is like file config .properties (key : value)
 version: '3'
 services:
-  backend:
-    container_name: njs
-    image: nodejs-api
+  ##
+  ##
+  ## Image Backend
+  ##
+  ##
+  backend: # this order use to specify name of service (almost use with command like up , down [for build iamge to container])
+    container_name: api # define container name
+    image: node_js
     build: . # position path (.) means current path (called Dockerfile)
     ports:
-      - "8000:8000" # port outside map to inside
+      - '8000:8000' # <Port exposed> : <Msql Port running inside container>
+    # **** No need to specify  links &  volumes 
+    #links: # to link containers over a network. When we link containers, Docker creates environment variables and adds containers to the known hosts list
+    #  - database
+    #volumes:
+    #  - information_database:/var/lib/mysql
+
+
   ##
   ##
+  ## Image Mysql
   ##
-  # this order use to specify name of service (almost use with command like up , down [for build iamge to container])
+  ##
   database:
-    container_name: msql # define container name
-    restart: always
-    image: mysql:latest # REPOSITORY : TAG of image
-    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql # define container name
+    restart: always # I ask docker-compose.yml to always restart this container if it fails.
+    image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: "${SQLD_ROOT_PASSWORD}" # password for root access (it is not relation to password for me at the time I connect mysql -u ...)
-      MYSQL_DATABASE: "${SQLD_DATABASE}" # define database (schema) init on mysql
-      MYSQL_USER: "${SQLD_USERNAME}" # define user of mysql (for connect)
-      MYSQL_PASSWORD: "${SQLD_PASSWORD}" # define password of mysql (for connect)
-    env_file:
-      # when you set env file in env_file:
-      # you don't need to use --env-file <path env file> when run docker
-      # like docker-compose --env-file .env up -d
+      MYSQL_ROOT_PASSWORD: '${SQLD_ROOT_PASSWORD}' # password for root access (it is not relation to password for me at the time I connect mysql -u ...)
+      MYSQL_DATABASE: '${SQLD_DATABASE}' # define database (schema) init on mysql
+      MYSQL_USER: '${SQLD_USERNAME}' # define user of mysql (for connect)
+      MYSQL_PASSWORD: '${SQLD_PASSWORD}' # define password of mysql (for connect)
+    env_file: # when you set env file in env_file: .env # you don't need to use --env-file <path env file> when run docker # like docker-compose --env-file .env up -d
       - .env
     ports:
-      - "${SQLD_EXPOSED_PORT}:3306" # <Port exposed> : <Msql Port running inside container>
+      - '${SQLD_EXPOSED_PORT}:3306'
     volumes:
       # the first way to map database inside container to outside (current path project)
       # - ./data:/var/lib/mysql # <data it is just name for store value on your database> : <follow document (path on docker conatainer)>
       # second way use with your volume for storing data (use volume name instead folder name)
-      - infomation_database:/var/lib/mysql
+      - information_database:/var/lib/mysql
+
+
   ##
+  ##
+  ## Image Phpmyadmin
   ##
   ##
   phpmyadmin:
     container_name: pma
     restart: always
-    image: phpmyadmin:latest # /phpmyadmin why ?
+    image: phpmyadmin
     environment:
-      PMA_HOST: "${PMA_HOST_DATABASE}" # specify which host you will give phpmyadmin managing (Service name of Database)
-      PMA_PORT: "${PMA_PORT_DATABASE}" # specify port of Database (real port no port that you exposed)
-      PMA_USER: "${PMA_USERNAME_DATABASE}" # specify user of Database (Mysql)
-      PMA_PASSWORD: "${PMA_PASSWORD_DATABASE}" # specify password of Database (Mysql)
+      PMA_HOST: '${PMA_HOST_DATABASE}' # specify which host you will give phpmyadmin managing (Service name of Database)
+      PMA_PORT: '${PMA_PORT_DATABASE}' # specify port of Database (real port no port that you exposed)
+      PMA_USER: '${PMA_USERNAME_DATABASE}' # specify user of Database (Mysql)
+      PMA_PASSWORD: '${PMA_PASSWORD_DATABASE}' # specify password of Database (Mysql)
     ports:
-      - "${PMA_EXPOSED_PORT}:80" # <Port exposed> : <Phpmyandmin Port running inside container>
+      - '${PMA_EXPOSED_PORT}:80'
     depends_on:
       - database
   ##
   ##
   ##
+  ##
+  ##
 volumes:
-  infomation_database:
+  information_database:
     # define volume name
     driver: local # use only current pc

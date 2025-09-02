@@ -1,4 +1,4 @@
-class ServiceModules {
+class CalculateModulesService {
     plus(a, b) {
         return a + b
     }
@@ -13,17 +13,16 @@ class ServiceModules {
     }
 }
 
-const serviceModules = new ServiceModules();
+const serviceModules = new CalculateModulesService();
 
 const plus = serviceModules.plus
-const devide = serviceModules.divide
+const divide = serviceModules.divide
 const minus = serviceModules.minus
 const multiply = serviceModules.multiply
 
-export {
-    // way to export many modules
+export { // way to export many modules
     plus,
-    devide,
+    divide,
     minus,
     multiply
 }

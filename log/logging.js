@@ -2,7 +2,8 @@ import path from 'path'
 import process from 'process'
 import { createLogger, format, transports } from 'winston'
 
-class MyLogging {
+class Logging {
+
     get log() {
         return createLogger({
             level: 'silly',
@@ -17,6 +18,7 @@ class MyLogging {
             ]
         }) // createLogger({})
     }
+
 }
-// way to export only module
-export default MyLogging
+
+export default Logging

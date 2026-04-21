@@ -1,24 +1,22 @@
 class CalculateModulesService {
-    plus(a, b) {
+    static plus(a, b) {
         return a + b
     }
-    divide(a, b) {
+    static divide(a, b) {
         return a / b
     }
-    multiply(a, b) {
+    static multiply(a, b) {
         return a * b
     }
-    minus(a, b) {
+    static minus(a, b) {
         return a - b
     }
 }
 
-const serviceModules = new CalculateModulesService();
-
-const plus = serviceModules.plus
-const divide = serviceModules.divide
-const minus = serviceModules.minus
-const multiply = serviceModules.multiply
+const plus = CalculateModulesService.plus
+const divide = CalculateModulesService.divide
+const minus = CalculateModulesService.minus
+const multiply = CalculateModulesService.multiply
 
 export { // way to export many modules
     plus,

@@ -4,13 +4,11 @@ import path from 'path'
 /**
     you don't forget 
     you set WORKDIR /usr/src/app
-    means any file that you add to container
-    they're on it !!
+    means any file that you add to container they're on it !!
     So .env you should access to /usr/src/app/.env Right ?
     it is not run on your current path pc
-    log.info(path.resolve('../app/.env'))
 */
-dotenv.config({ path: path.resolve('.env') ,debug :true})
+dotenv.config({ path: path.resolve('.env') ,debug :true}) // on local
 
 class ConnectDatabase {
 
@@ -19,8 +17,8 @@ class ConnectDatabase {
     #initConnectMySQL = async () => {
         this.myConnect = await mysql.createConnection({
             // host: '127.0.0.1', // 127.0.0.1 or localhost work for local host access container !!
-            // host: process.env.PMA_HOST_DATABASE, // not working anymore why ??
-            host: 'host.docker.internal', // fix error connect ECONNREFUSED 172.21.0.2:3307 why it can't connect by service name
+            // host: process.env.PMA_HOST_DATABASE, // not working
+            host: 'host.docker.internal', // for container access container
             user: process.env.SQLD_USERNAME,
             password: process.env.SQLD_PASSWORD,
             database: process.env.SQLD_DATABASE,

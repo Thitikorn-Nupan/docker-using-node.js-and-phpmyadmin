@@ -1,29 +1,15 @@
 # docker-compose.yml is like file config .properties (key : value)
 version: '3'
 services:
-  ##
-  ##
-  ## Image Backend
-  ##
-  ##
+
   backend: # this order use to specify name of service (almost use with command like up , down [for build iamge to container])
     container_name: api # define container name
     image: node_js
     build: . # position path (.) means current path (called Dockerfile)
     ports:
       - '8000:8000' # <Port exposed> : <Msql Port running inside container>
-    # **** No need to specify  links &  volumes 
-    #links: # to link containers over a network. When we link containers, Docker creates environment variables and adds containers to the known hosts list
-    #  - database
-    #volumes:
-    #  - information_database:/var/lib/mysql
 
 
-  ##
-  ##
-  ## Image Mysql
-  ##
-  ##
   database:
     container_name: mysql # define container name
     restart: always # I ask docker-compose.yml to always restart this container if it fails.
@@ -44,11 +30,6 @@ services:
       - information_database:/var/lib/mysql
 
 
-  ##
-  ##
-  ## Image Phpmyadmin
-  ##
-  ##
   phpmyadmin:
     container_name: pma
     restart: always
@@ -62,11 +43,8 @@ services:
       - '${PMA_EXPOSED_PORT}:80'
     depends_on:
       - database
-  ##
-  ##
-  ##
-  ##
-  ##
+
+
 volumes:
   information_database:
     # define volume name

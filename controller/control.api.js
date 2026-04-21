@@ -3,8 +3,6 @@ import HttpModulesService from '../services/http.modules.service.js';
 import { plus, divide, multiply, minus } from '../services/calculate.modules.service.js'; // export { }
 import ConnectDatabase from '../config/connect.database.js';
 
-
-
 class ControlApi {
 
     #log = null
@@ -21,42 +19,44 @@ class ControlApi {
 
         const application = this.#serviceHttp.application
 
+        function responseJson(result) {
+            return { response: result }
+        }
+
         application.get('/plus/(:a)/(:b)', (req, res) => {
-            /* 
-                first before cal should convert string to type number 
-            */
+            // first before cal should convert string to type number
             let result = plus(Number(req.params['a']), Number(req.params['b']))
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
         application.get('/divide/(:a)/(:b)', (req, res) => {
             let result = divide(Number(req.params['a']), Number(req.params['b']))
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
         application.get('/multiply/(:a)/(:b)', (req, res) => {
             let result = multiply(Number(req.params['a']), Number(req.params['b']))
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
         application.get('/minus/(:a)/(:b)', (req, res) => {
             let result = minus(Number(req.params['a']), Number(req.params['b']))
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
-        // CRUD
+        // CRUD (only get methods)
         application.get('/users', async (req, res) => {
             let [result] = await this.#cndb.myConnect.query('select * from users')
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
@@ -65,7 +65,7 @@ class ControlApi {
             let id = req.params['id']
             let [result] = await this.#cndb.myConnect.query('select * from users where id = ?', id)
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
@@ -73,7 +73,7 @@ class ControlApi {
             let id = req.params['id']
             let [result] = await this.#cndb.myConnect.query('delete from users where id = ?', id)
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
@@ -82,7 +82,7 @@ class ControlApi {
             let age = req.params['age']
             let [result] = await this.#cndb.myConnect.query('insert into users(fullname,age) values (?,?)', [fullname, age])
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
             /* {
                 "fieldCount": 0,
@@ -101,7 +101,7 @@ class ControlApi {
             let age = req.params['age']
             let [result] = await this.#cndb.myConnect.query('update users set fullname = ? , age = ? where id = ?', [fullname, age, id])
             res.status(200).json(
-                { response: result }
+                responseJson(result)
             )
         })
 
